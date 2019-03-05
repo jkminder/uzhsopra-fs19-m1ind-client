@@ -6,7 +6,7 @@ import User from "../shared/models/User";
 import { withRouter } from "react-router-dom";
 import { Button } from "../../views/design/Button";
 
-const FormContainer = styled.div`
+ const FormContainer = styled.div`
   margin-top: 2em;
   display: flex;
   flex-direction: column;
@@ -15,7 +15,7 @@ const FormContainer = styled.div`
   justify-content: center;
 `;
 
-const Form = styled.div`
+ const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -30,7 +30,7 @@ const Form = styled.div`
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
-const InputField = styled.input`
+ const InputField = styled.input`
   &::placeholder {
     color: rgba(255, 255, 255, 0.2);
   }
@@ -44,16 +44,21 @@ const InputField = styled.input`
   color: white;
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
   color: white;
   margin-bottom: 10px;
   text-transform: uppercase;
 `;
 
-const ButtonContainer = styled.div`
+export const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 20px;
+`;
+
+const SignUpButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 /**
@@ -111,6 +116,9 @@ class Login extends React.Component {
       });
   }
 
+  signup() {
+    this.props.history.push(`/register`)
+  }
   /**
    *  Every time the user enters something in the input field, the state gets updated.
    * @param key (the key of the state for identifying the field that needs to be updated)
@@ -136,6 +144,16 @@ class Login extends React.Component {
       <BaseContainer>
         <FormContainer>
           <Form>
+            <SignUpButtonContainer>
+              <Button
+                  width="20%"
+                  onClick={() => {
+                    this.signup();
+                  }}
+              >
+                Sign Up
+              </Button>
+            </SignUpButtonContainer>
             <Label>Username</Label>
             <InputField
               placeholder="Enter here.."
