@@ -38,20 +38,26 @@ class Game extends React.Component {
   }
 
   componentDidMount() {
-    fetch(`${getDomain()}/users`, {
+    fetch(`${getDomain()}/users?token=${localStorage.getItem("token")}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
       }
     })
-      .then(response => response.json())
-      .then(async users => {
+      .then(response => response.json(), error =>
+      {
+        this.props.history.push("/login");
+      })
+      .then( users => {
         // delays continuous execution of an async operation for 0.8 seconds.
         // This is just a fake async call, so that the spinner can be displayed
         // feel free to remove it :)
-        await new Promise(resolve => setTimeout(resolve, 800));
+          try { this.setState({users}); }
+          catch {
+            alert("Sorry something went wrong!");
+            this.logout();
+          }
 
-        this.setState({ users });
       })
       .catch(err => {
         console.log(err);

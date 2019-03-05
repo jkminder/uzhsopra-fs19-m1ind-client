@@ -56,11 +56,6 @@ export const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-const SignUpButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
-
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
  * You should have a class (instead of a functional component) when:
@@ -80,7 +75,7 @@ class Login extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: null,
+      password: null,
       username: null
     };
   }
@@ -89,17 +84,13 @@ class Login extends React.Component {
    * If the request is successful, a new user is returned to the front-end and its token is stored in the localStorage.
    */
   login() {
-    fetch(`${getDomain()}/users`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        username: this.state.username,
-        name: this.state.name
-      })
+    fetch(`${getDomain()}/users/${this.state.username}?pw=${this.state.password}`, {
+      method: "GET"
     })
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) throw new Error(response.status);
+        return response.json()
+      })
       .then(returnedUser => {
         const user = new User(returnedUser);
         // store the token into the local storage
@@ -144,16 +135,6 @@ class Login extends React.Component {
       <BaseContainer>
         <FormContainer>
           <Form>
-            <SignUpButtonContainer>
-              <Button
-                  width="20%"
-                  onClick={() => {
-                    this.signup();
-                  }}
-              >
-                Sign Up
-              </Button>
-            </SignUpButtonContainer>
             <Label>Username</Label>
             <InputField
               placeholder="Enter here.."
@@ -161,22 +142,30 @@ class Login extends React.Component {
                 this.handleInputChange("username", e.target.value);
               }}
             />
-            <Label>Name</Label>
-            <InputField
+            <Label>Password</Label>
+            <InputField type="password"
               placeholder="Enter here.."
               onChange={e => {
-                this.handleInputChange("name", e.target.value);
+                this.handleInputChange("password", e.target.value);
               }}
             />
             <ButtonContainer>
               <Button
-                disabled={!this.state.username || !this.state.name}
+                disabled={!this.state.username || !this.state.password}
                 width="50%"
                 onClick={() => {
                   this.login();
                 }}
               >
                 Login
+              </Button>
+              <Button
+                  width="20%"
+                  onClick={() => {
+                    this.signup();
+                  }}
+              >
+                Sign Up
               </Button>
             </ButtonContainer>
           </Form>
