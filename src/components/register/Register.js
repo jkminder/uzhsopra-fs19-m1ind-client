@@ -31,6 +31,11 @@ const Form = styled.div`
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
+const ErrorLabel = styled.label`
+  color: red;
+  margin-bottom: 10px;
+  display: ${props => (props.display)};
+`;
 const InputField = styled.input`
   &::placeholder {
     color: rgba(255, 255, 255, 0.2);
@@ -38,7 +43,7 @@ const InputField = styled.input`
   height: 35px;
   padding-left: 15px;
   margin-left: -4px;
-  border: ${props => (props.valid ? "none" : "#b22222 solid 2px")};
+  border: ${props => (props.invalid ? "#b22222 solid 2px" :"none")};
   border-radius: 20px;
   margin-bottom: 20px;
   background: rgba(255, 255, 255, 0.2);
@@ -117,28 +122,28 @@ class Register extends React.Component {
                         <Title>Enter your credentials!</Title>
                         <Label>Username</Label>
                         <InputField
-                            placeholder="Enter here.." valid="true"
+                            placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange("username", e.target.value);
                             }}
                         />
                         <Label>Full Name</Label>
                         <InputField
-                            placeholder="Enter here.." valid="true"
+                            placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange("name", e.target.value);
                             }}
                         />
                         <Label>Password</Label>
                         <InputField type="password"
-                            placeholder="Enter here.." valid="true"
+                            placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange("password", e.target.value);
                             }}
                         />
                         <Label>Repeat Password</Label>
                         <InputField type="password"
-                                    placeholder="Enter here.." valid={this.state.passwordValid}
+                                    placeholder="Enter here.." invalid={!this.state.passwordValid}
                                     onChange={e => {
                                         this.handlePasswordValidation(e.target.value);
                                     }}
