@@ -5,7 +5,9 @@ import {withRouter} from "react-router-dom";
 import {ButtonContainer, Label} from "../login/Login";
 import styled from "styled-components";
 import {getDomain} from "../../helpers/getDomain";
+
 import User from "../shared/models/User";
+
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -148,12 +150,19 @@ class Register extends React.Component {
                             onChange={e => {
                                 this.handleInputChange("password", e.target.value);
                             }}
+
                         />
                         <Label>Repeat Password</Label>
                         <InputField type="password"
                                     placeholder="Enter here.." invalid={!this.state.passwordValid}
                                     onChange={e => {
                                         this.handlePasswordValidation(e.target.value);
+                                    }}
+                                    onKeyPress={event => {
+                                        if(!this.state.username || !this.state.name || !this.state.passwordValid || !this.state.password) return;
+                                        if(event.key === 'Enter') {
+                                            this.login();
+                                        }
                                     }}
                         />
                         <ButtonContainer>
