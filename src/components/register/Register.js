@@ -21,7 +21,7 @@ const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 60%;
-  height: 525px;
+  height: 535px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
@@ -33,9 +33,11 @@ const Form = styled.div`
 
 const ErrorLabel = styled.label`
   color: red;
-  margin-bottom: 10px;
   display: ${props => (props.display)};
+  line-height:.7em;
+  margin-bottom: 0.5em;
 `;
+
 const InputField = styled.input`
   &::placeholder {
     color: rgba(255, 255, 255, 0.2);
@@ -63,7 +65,8 @@ class Register extends React.Component {
             name: null,
             password: null,
             passwordRepeat: null,
-            passwordValid: true
+            passwordValid: true,
+            requestValid: true
         }
     }
     register(){
@@ -78,11 +81,14 @@ class Register extends React.Component {
                 password: this.state.password
             })
         })
-            .then(response => {
-                if(!response.ok) throw new Error(response.status);
-                return response.json()
-            })
+            .then(response => response.json())
             .then(returnedUser => {
+                //handle errorresponses
+                if (returnedUser.status === 400) {
+                    this.setState({"requestValid": false});
+                    return;
+                }
+                else if (returnedUser.status !== "OFFLINE") throw new Error(returnedUser.status + " - " + returnedUser.message);
                 this.props.history.push(`/login`);
             })
             .catch(err => {
@@ -121,6 +127,8 @@ class Register extends React.Component {
                     <Form>
                         <Title>Enter your credentials!</Title>
                         <Label>Username</Label>
+                        <ErrorLabel display={this.state.requestValid?"none":""}>username already existing.</ErrorLabel>
+
                         <InputField
                             placeholder="Enter here.."
                             onChange={e => {
@@ -150,7 +158,7 @@ class Register extends React.Component {
                         />
                         <ButtonContainer>
                             <Button
-                                disabled={!this.state.username || !this.state.name || !this.state.passwordValid}
+                                disabled={!this.state.username || !this.state.name || !this.state.passwordValid || !this.state.password}
                                 width="50%"
                                 onClick={() => {
                                     this.register();
