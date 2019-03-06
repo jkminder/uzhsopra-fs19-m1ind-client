@@ -56,6 +56,12 @@ export const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
+const ErrorLabel = styled.label`
+  color: red;
+  margin-bottom: 10px;
+  display: ${props => (props.display)};
+`;
+
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
  * You should have a class (instead of a functional component) when:
@@ -76,7 +82,8 @@ class Login extends React.Component {
     super();
     this.state = {
       password: null,
-      username: null
+      username: null,
+      requestValid: true,
     };
   }
   /**
@@ -85,13 +92,20 @@ class Login extends React.Component {
    */
   login() {
     fetch(`${getDomain()}/users/${this.state.username}?pw=${this.state.password}`, {
-      method: "GET"
+      method: "GET",
+      headers: {
+        Accept: 'application/json'
+      }
     })
-      .then(response => {
-        if (!response.ok) throw new Error(response.status);
-        return response.json()
-      })
+      .then(response => response.json())
       .then(returnedUser => {
+        //handle errorresponses
+        if (returnedUser.status === 404 || returnedUser.status === 401) {
+          this.setState({"requestValid": false});
+          return;
+        }
+        else if (returnedUser.status !== "ONLINE") throw new Error(returnedUser.status + " - " + returnedUser.message);
+        this.setState({"requestValid": true});
         const user = new User(returnedUser);
         // store the token into the local storage
         localStorage.setItem("token", user.token);
@@ -149,6 +163,7 @@ class Login extends React.Component {
                 this.handleInputChange("password", e.target.value);
               }}
             />
+            <ErrorLabel display={this.state.requestValid?"none":""}>Incorrect username or password.</ErrorLabel>
             <ButtonContainer>
               <Button
                 disabled={!this.state.username || !this.state.password}
