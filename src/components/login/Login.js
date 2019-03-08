@@ -168,6 +168,12 @@ class Login extends React.Component {
                                     onChange={e => {
                                         this.handleInputChange("password", e.target.value);
                                     }}
+                                    onKeyPress={event => {
+                                        if (!this.state.username || !this.state.password) return;
+                                        if (event.key === 'Enter') {
+                                            this.login();
+                                        }
+                                    }}
                         />
                         <ErrorLabel display={this.state.requestValid ? "none" : ""}>Incorrect username or
                             password.</ErrorLabel>

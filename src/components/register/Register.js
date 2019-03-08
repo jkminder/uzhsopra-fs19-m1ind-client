@@ -5,7 +5,10 @@ import {withRouter} from "react-router-dom";
 import {ButtonContainer, Label} from "../login/Login";
 import styled from "styled-components";
 import {getDomain} from "../../helpers/getDomain";
-//import User from "../shared/models/User";
+
+
+import User from "../shared/models/User";
+
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -21,7 +24,7 @@ const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 60%;
-  height: 525px;
+  height: 535px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
@@ -31,6 +34,13 @@ const Form = styled.div`
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
+const ErrorLabel = styled.label`
+  color: red;
+  display: ${props => (props.display)};
+  line-height:.7em;
+  margin-bottom: 0.5em;
+`;
+
 const InputField = styled.input`
   &::placeholder {
     color: rgba(255, 255, 255, 0.2);
@@ -38,7 +48,7 @@ const InputField = styled.input`
   height: 35px;
   padding-left: 15px;
   margin-left: -4px;
-  border: ${props => (props.valid ? "none" : "#b22222 solid 2px")};
+  border: ${props => (props.invalid ? "#b22222 solid 2px" :"none")};
   border-radius: 20px;
   margin-bottom: 20px;
   background: rgba(255, 255, 255, 0.2);
@@ -58,7 +68,8 @@ class Register extends React.Component {
             name: null,
             password: null,
             passwordRepeat: null,
-            passwordValid: true
+            passwordValid: true,
+            requestValid: true
         }
     }
     register(){
@@ -73,11 +84,14 @@ class Register extends React.Component {
                 password: this.state.password
             })
         })
-            .then(response => {
-                if(!response.ok) throw new Error(response.status);
-                return response.json()
-            })
+            .then(response => response.json())
             .then(returnedUser => {
+                //handle errorresponses
+                if (returnedUser.status === 400) {
+                    this.setState({"requestValid": false});
+                    return;
+                }
+                else if (returnedUser.status !== "OFFLINE") throw new Error(returnedUser.status + " - " + returnedUser.message);
                 this.props.history.push(`/login`);
             })
             .catch(err => {
@@ -117,37 +131,46 @@ class Register extends React.Component {
                     <Form>
                         <Title>Enter your credentials!</Title>
                         <Label>Username</Label>
+                        <ErrorLabel display={this.state.requestValid?"none":""}>username already existing.</ErrorLabel>
+
                         <InputField
-                            placeholder="Enter here.." valid="true"
+                            placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange("username", e.target.value);
                             }}
                         />
                         <Label>Full Name</Label>
                         <InputField
-                            placeholder="Enter here.." valid="true"
+                            placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange("name", e.target.value);
                             }}
                         />
                         <Label>Password</Label>
                         <InputField type="password"
-                            placeholder="Enter here.." valid="true"
+                            placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange("password", e.target.value);
                                 this.handlePasswordValidation(this.state.passwordRepeat);
                             }}
+
                         />
                         <Label>Repeat Password</Label>
                         <InputField type="password"
-                                    placeholder="Enter here.." valid={this.state.passwordValid}
+                                    placeholder="Enter here.." invalid={!this.state.passwordValid}
                                     onChange={e => {
                                         this.handlePasswordValidation(e.target.value);
+                                    }}
+                                    onKeyPress={event => {
+                                        if(!this.state.username || !this.state.name || !this.state.passwordValid || !this.state.password) return;
+                                        if(event.key === 'Enter') {
+                                            this.login();
+                                        }
                                     }}
                         />
                         <ButtonContainer>
                             <Button
-                                disabled={!this.state.username || !this.state.name || !this.state.passwordValid}
+                                disabled={!this.state.username || !this.state.name || !this.state.passwordValid || !this.state.password}
                                 width="50%"
                                 onClick={() => {
                                     this.register();
