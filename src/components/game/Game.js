@@ -15,6 +15,7 @@ const Container = styled(BaseContainer)`
 const Linki = styled(Link)`
   color: white;
   text-underline: none;
+  text-decoration: none;
 `;
 
 const Users = styled.ul`
@@ -97,7 +98,7 @@ class Game extends React.Component {
                         <Users>
                             {this.state.users.map(user => {
                                 return (
-                                    <Linki to={`/users/${user.username}/profile`}>
+                                    <Linki to={`/users/${user.id}`}>
                                         <PlayerContainer key={user.id}>
                                             <Player user={user}/>
                                         </PlayerContainer>

@@ -6,6 +6,8 @@ import { LoginGuard } from "../routeProtectors/LoginGuard";
 import Login from "../../login/Login";
 import Register from "../../register/Register"
 import {RegisterGuard} from "../routeProtectors/RegisterGuard";
+import UsersRouter from "./UsersRouter";
+import Profile from "../../profile/Profile";
 
 /**
  * Main router of your application.
@@ -48,6 +50,10 @@ class AppRouter extends React.Component {
                       </RegisterGuard>
                   )}
               />
+              <Route
+                  path="/users/:id"
+                  component={Profile}
+              />
             <Route path="/" exact render={() => <Redirect to={"/game"} />} />
           </div>
         </Switch>
@@ -55,6 +61,7 @@ class AppRouter extends React.Component {
     );
   }
 }
+
 /*
 * Don't forget to export your component!
  */

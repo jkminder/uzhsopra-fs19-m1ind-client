@@ -2,6 +2,9 @@ import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
+ &:hover {
+    background-color: rgba(256,256,256,.05);
+  }
   margin: 6px 0;
   width: 280px;
   padding: 10px;
