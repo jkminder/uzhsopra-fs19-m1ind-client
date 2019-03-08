@@ -71,6 +71,7 @@ class Game extends React.Component {
           catch {
             alert("Sorry something went wrong!");
             this.logout();
+            localStorage.removeItem("token");
           }
 
       })
