@@ -51,10 +51,13 @@ class AppRouter extends React.Component {
                   )}
               />
               <Route
+                  exact
                   path="/users/:id"
                   component={Profile}
               />
-            <Route path="/" exact render={() => <Redirect to={"/game"} />} />
+              <Route path="/users" exact render={() => <Redirect to={"/game"} />} />
+
+              <Route path="/" exact render={() => <Redirect to={"/game"} />} />
           </div>
         </Switch>
       </BrowserRouter>

@@ -71,11 +71,30 @@ class Profile extends React.Component {
                 <Label>{this.state.user.id}</Label>
                 <Label>{this.state.user.username}</Label>
                 <Label>{this.state.user.name}</Label>
-                <Label>{this.state.user.birthDay}</Label>
-                <Label>{this.state.user.creationDate}</Label>
+                <Label>{this.creationDate()}</Label>
+                <Label>{this.birthDay()}</Label>
+                <Button
+                    width="20%"
+                    onClick={() => {
+                        this.props.history.push("/game");
+                    }}
+                >
+                    Back
+                </Button>
             </Container>
         );
     }
+
+    birthDay(){
+        if (this.state.user.birthDay === null) return "No Birthday available!";
+        return (new Date(Number(this.state.user.birthDay))).toDateString();
+    }
+    creationDate(){
+        return (new Date(Number(this.state.user.creationDate))).toDateString();
+    }
 }
+
+
+
 
 export default withRouter(Profile);
