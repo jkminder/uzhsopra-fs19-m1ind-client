@@ -86,7 +86,7 @@ class Register extends React.Component {
         })
             .then(response => response.json())
             .then(returnedUser => {
-                //handle errorresponses
+                //handle error responses
                 if (returnedUser.status === 400) {
                     this.setState({"requestValid": false});
                     return;
@@ -111,6 +111,7 @@ class Register extends React.Component {
         this.setState({ [key]: value });
     }
 
+    ///new method with password validation
     handlePasswordValidation(value) {
         // Example: if the key is username, this statement is the equivalent to the following one:
         // this.setState({'username': value});
