@@ -33,8 +33,23 @@ class Game extends React.Component {
   }
 
   logout() {
-    localStorage.removeItem("token");
-    this.props.history.push("/login");
+    fetch(`${getDomain()}/users/logout?token=${localStorage.getItem("token")}`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({token: localStorage.getItem(("token"))})
+    }).then(response => {
+      if (response.ok){
+        localStorage.removeItem("token");
+        this.props.history.push("/login");
+      }
+      else throw new Error(response.status);
+    }).catch(err => {
+      console.log(err);
+      alert("Something went wrong: " + err);
+    });
   }
 
   componentDidMount() {

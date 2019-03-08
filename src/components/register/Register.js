@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 import {ButtonContainer, Label} from "../login/Login";
 import styled from "styled-components";
 import {getDomain} from "../../helpers/getDomain";
-import User from "../shared/models/User";
+//import User from "../shared/models/User";
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -106,6 +106,7 @@ class Register extends React.Component {
         }
         else {
             this.setState({"passwordValid": null});
+            this.setState({"passwordRepeat": value});
         }
     }
     componentDidMount() {}
@@ -134,6 +135,7 @@ class Register extends React.Component {
                             placeholder="Enter here.." valid="true"
                             onChange={e => {
                                 this.handleInputChange("password", e.target.value);
+                                this.handlePasswordValidation(this.state.passwordRepeat);
                             }}
                         />
                         <Label>Repeat Password</Label>
