@@ -6,7 +6,7 @@ import User from "../shared/models/User";
 import {withRouter} from "react-router-dom";
 import {Button} from "../../views/design/Button";
 
-const FormContainer = styled.div`
+export const FormContainer = styled.div`
   margin-top: 2em;
   display: flex;
   flex-direction: column;
@@ -15,7 +15,7 @@ const FormContainer = styled.div`
   justify-content: center;
 `;
 
-const Form = styled.div`
+export const Form = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -113,6 +113,7 @@ class Login extends React.Component {
                 this.setState({"requestValid": true});
                 // store the token into the local storage
                 localStorage.setItem("token", jsonResponse.token);
+                localStorage.setItem("id", jsonResponse.id);
                 // user login successfully worked --> navigate to the route /game in the GameRouter
                 this.props.history.push(`/game`);
             })
@@ -125,7 +126,7 @@ class Login extends React.Component {
             });
     }
 
-    signup() {
+    signUp() {
         this.props.history.push(`/register`)
     }
 
@@ -190,7 +191,7 @@ class Login extends React.Component {
                             <Button
                                 width="20%"
                                 onClick={() => {
-                                    this.signup();
+                                    this.signUp();
                                 }}
                             >
                                 Sign Up

@@ -17,7 +17,6 @@ const Linki = styled(Link)`
   text-underline: none;
   text-decoration: none;
 `;
-
 const Users = styled.ul`
   list-style: none;
   padding-left: 0;
@@ -49,6 +48,7 @@ class Game extends React.Component {
         }).then(response => {
             if (response.ok) {
                 localStorage.removeItem("token");
+                localStorage.removeItem("id");
                 this.props.history.push("/login");
             } else throw new Error(response.status);
         }).catch(err => {
@@ -77,6 +77,7 @@ class Game extends React.Component {
                     alert("Sorry something went wrong!");
                     this.logout();
                     localStorage.removeItem("token");
+                    localStorage.removeItem("id");
                 }
 
             })
@@ -89,8 +90,7 @@ class Game extends React.Component {
     render() {
         return (
             <Container>
-                <h2>Happy Coding! </h2>
-                <p>Get all users from secure end point:</p>
+                <h2>Users:</h2>
                 {!this.state.users ? (
                     <Spinner/>
                 ) : (

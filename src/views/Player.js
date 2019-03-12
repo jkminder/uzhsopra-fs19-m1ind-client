@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import {OnlineState} from "../components/profile/Profile";
 
 const Container = styled.div`
  &:hover {
@@ -22,12 +23,19 @@ const UserName = styled.div`
 const Name = styled.div`
   font-weight: bold;
   color: #06c4ff;
+  white-space: nowrap;
 `;
 
 const Id = styled.div`
   margin-left: auto;
   margin-right: 10px;
   font-weight: bold;
+`;
+
+const OnlineStateContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
 `;
 
 /**
@@ -42,7 +50,9 @@ const Player = ({ user }) => {
   return (
     <Container>
       <Name>{user.name}</Name> <UserName>{user.username}</UserName>
-      <Id>Id: {user.id}</Id>
+        <OnlineStateContainer>
+            <OnlineState on={user.status === "ONLINE"}/>
+        </OnlineStateContainer>
     </Container>
   );
 };
