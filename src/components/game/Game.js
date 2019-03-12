@@ -100,7 +100,7 @@ class Game extends React.Component {
                                 return (
                                     <Linki to={`/users/${user.id}`}>
                                         <PlayerContainer key={user.id}>
-                                            <Player user={user}/>
+                                            <Player user={user} />
                                         </PlayerContainer>
                                     </Linki>
                                 );

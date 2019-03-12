@@ -6,6 +6,7 @@ const Container = styled.div`
  &:hover {
     background-color: rgba(256,256,256,.05);
   }
+  background-color: ${(props => (props.id == localStorage.getItem("id").toString())? "rgba(050,205,050,0.1)" : "none")};
   margin: 6px 0;
   width: 280px;
   padding: 10px;
@@ -48,7 +49,7 @@ const OnlineStateContainer = styled.div`
  */
 const Player = ({ user }) => {
   return (
-    <Container>
+    <Container id ={user.id}>
       <Name>{user.name}</Name> <UserName>{user.username}</UserName>
         <OnlineStateContainer>
             <OnlineState on={user.status === "ONLINE"}/>
