@@ -3,6 +3,7 @@ import {getDomain} from "../../helpers/getDomain";
 import {BaseContainer} from "../../helpers/layout";
 import {Button} from "../../views/design/Button";
 import {withRouter} from "react-router-dom";
+import {Game} from  "../game/Game";
 import React from "react";
 import {FormContainer, Form} from "../login/Login";
 import {DateSelector} from "../../views/design/DateSelector";
@@ -146,6 +147,7 @@ class Profile extends React.Component {
     };
 
     fetchUserData(){
+        let status;
         fetch(`${getDomain()}/users/${this.state.id}?token=${localStorage.getItem("token")}`, {
             method: "GET",
             headers: {
@@ -163,7 +165,7 @@ class Profile extends React.Component {
                     this.setState({"user": user}, () => {this.forceUpdate()});
                 } catch (err) {
                     alert("Sorry something went wrong!" + err);
-                    this.logout();
+                    Game.logout();
                     localStorage.removeItem("token");
                 }
             })
@@ -316,30 +318,26 @@ class ProfileEdit extends React.Component {
         let un = this.username ? this.username : this.state.user.username;
         let n = this.name ? this.name : this.state.user.name;
         let b = this.birthday ? this.birthday : this.state.user.birthDay;
-        alert(this.state.user.birthday);
-        alert(b);
         fetch(`${getDomain()}/users/${this.state.user.id}?token=${localStorage.getItem("token")}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                username: un,
-                name: n,
-                birthDay: b
-            })
-        })
-            .then(response => {
-                if (!response.ok) throw new Error("Please login again!");
+            body: JSON.stringify({username: un, name: n, birthDay: b})
+        }).then(response => {
+            if (response.status === 409) alert("Username is already existing!");
+            else if (response.status !== 204) throw new Error("Your Authentication is invalid. Login again!");
+                this.props.onSave();
+                this.props.onCancel();
             }).catch(err => {
             if (err.message.match(/Failed to fetch/)) {
                 alert("The server cannot be reached. Did you start it?");
             } else {
                 alert(`Something went wrong during the update: ${err.message}`);
+                Game.logout();
             }
             this.props.onServerError();
-        });
-
+        })
     }
 
     render() {
@@ -383,8 +381,7 @@ class ProfileEdit extends React.Component {
                                 width="30%"
                                 onClick={() => {
                                     this.sendData();
-                                    this.props.onSave();
-                                    this.props.onCancel();
+
                                 }}
                             >
                                 Save

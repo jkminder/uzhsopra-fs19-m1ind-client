@@ -29,15 +29,15 @@ const PlayerContainer = styled.li`
   justify-content: center;
 `;
 
-class Game extends React.Component {
-    constructor() {
-        super();
+export class Game extends React.Component {
+    constructor(props) {
+        super(props);
         this.state = {
             users: null
         };
     }
 
-    logout() {
+    static logout() {
         fetch(`${getDomain()}/users/logout?token=${localStorage.getItem("token")}`, {
             headers: {
                 'Accept': 'application/json',
@@ -46,15 +46,12 @@ class Game extends React.Component {
             method: "POST",
             body: JSON.stringify({token: localStorage.getItem(("token"))})
         }).then(response => {
-            if (response.ok) {
-                localStorage.removeItem("token");
-                localStorage.removeItem("id");
-                this.props.history.push("/login");
-            } else throw new Error(response.status);
+            if (!response.ok) throw new Error(response.status);
         }).catch(err => {
             console.log(err);
-            alert("Something went wrong: " + err);
         });
+        localStorage.removeItem("token");
+        localStorage.removeItem("id");
     }
 
     componentDidMount() {
@@ -65,7 +62,7 @@ class Game extends React.Component {
             }
         })
             .then(response => response.json(), error => {
-                this.props.history.push("/login");
+                Game.logout();
             })
             .then(users => {
                 // delays continuous execution of an async operation for 0.8 seconds.
@@ -75,9 +72,7 @@ class Game extends React.Component {
                     this.setState({users});
                 } catch {
                     alert("Sorry something went wrong!");
-                    this.logout();
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("id");
+                    Game.logout();
                 }
 
             })
@@ -109,7 +104,8 @@ class Game extends React.Component {
                         <Button
                             width="100%"
                             onClick={() => {
-                                this.logout();
+                                Game.logout();
+                                this.props.history.push("/login")
                             }}
                         >
                             Logout

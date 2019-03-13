@@ -86,13 +86,12 @@ class Register extends React.Component {
                 birthDay: this.state.birthday,
             })
         })
-            .then(response => response.json())
-            .then(returnedUser => {
-                //handle error responses
-                if (returnedUser.status === 400) {
+            .then(response => {
+                if (response.status === 409) {
                     this.setState({"requestValid": false});
                     return;
-                } else if (returnedUser.status !== "OFFLINE") throw new Error(returnedUser.status + " - " + returnedUser.message);
+                } else if (response.status === 201) alert("User has been created!");
+                else throw new Error();
                 this.props.history.push(`/login`);
             })
             .catch(err => {
