@@ -47,7 +47,7 @@ export class DateSelector extends React.Component {
             yearValid: true,
             day: null,
             dayValid : true,
-            month: "01",
+            month: this.props.month ? this.props.month: "01",
             maxDays: 31
         }
     }
@@ -153,7 +153,7 @@ export class DateSelector extends React.Component {
                 />
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <DropDown
-                    value = {this.props.month ? this.props.month: "01"}
+                    value = {this.month}
                     onChange={e => {
                     this.handleInputChange("month", e.target.value);
                     this.handleMonthChange(e.target.value)

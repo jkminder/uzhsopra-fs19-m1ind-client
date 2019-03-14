@@ -6,7 +6,7 @@ import { isProduction } from "./isProduction";
  * @returns {string}
  */
 export const getDomain = () => {
-  const prodUrl = "https://sopra-fs19-jumind-server.herokuapp.com"; 
+  const prodUrl = "https://sopra-fs19-jumind-server.herokuapp.com";
   const devUrl = "http://localhost:8080";
   if (isProduction()) {
     return prodUrl;
